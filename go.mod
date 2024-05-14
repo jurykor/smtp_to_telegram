@@ -1,6 +1,6 @@
 module github.com/jurykor/smtp_to_telegram
 
-go 1.21
+go 1.22
 
 require (
 	github.com/docker/go-units v0.5.0

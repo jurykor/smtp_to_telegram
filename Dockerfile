@@ -1,4 +1,4 @@
-FROM golang:1.21-alpine3.18 AS builder
+FROM golang:1.22-alpine3.19 AS builder
 
 RUN apk add --no-cache git ca-certificates mailcap
 
@@ -19,7 +19,7 @@ RUN CGO_ENABLED=0 GOOS=linux go build -v \
 
 
 
-FROM alpine:3.18
+FROM alpine:3.19
 
 RUN apk add --no-cache ca-certificates mailcap
 
