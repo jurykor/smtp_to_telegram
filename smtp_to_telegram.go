@@ -5,13 +5,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	units "github.com/docker/go-units"
-	"github.com/flashmob/go-guerrilla"
-	"github.com/flashmob/go-guerrilla/backends"
-	"github.com/flashmob/go-guerrilla/log"
-	"github.com/flashmob/go-guerrilla/mail"
-	"github.com/jhillyerd/enmime"
-	"github.com/urfave/cli/v2"
 	"io/ioutil"
 	"mime"
 	"mime/multipart"
@@ -23,6 +16,14 @@ import (
 	"strings"
 	"syscall"
 	"time"
+
+	units "github.com/docker/go-units"
+	"github.com/flashmob/go-guerrilla"
+	"github.com/flashmob/go-guerrilla/backends"
+	"github.com/flashmob/go-guerrilla/log"
+	"github.com/flashmob/go-guerrilla/mail"
+	"github.com/jhillyerd/enmime"
+	"github.com/urfave/cli/v2"
 )
 
 var (
@@ -153,7 +154,7 @@ func main() {
 		},
 		&cli.StringFlag{
 			Name:     "telegram-chat-ids",
-			Usage:    "Telegram: comma-separated list of chat ids",
+			Usage:    "Telegram: comma-separated list of chat ids, could also have email mapping to chat id",
 			EnvVars:  []string{"ST_TELEGRAM_CHAT_IDS"},
 			Required: true,
 		},
@@ -287,6 +288,22 @@ func SendEmailToTelegram(e *mail.Envelope,
 	}
 
 	for _, chatId := range strings.Split(telegramConfig.telegramChatIds, ",") {
+		toMail := ""
+		mailContains := false
+		if strings.Contains(chatId, ":") {
+			parsedChatId := strings.Split(chatId, ":")
+			toMail, chatId = parsedChatId[0], parsedChatId[1]
+			for _, MailTo := range e.RcptTo {
+				logger.Info(toMail, MailTo.String())
+				if strings.Contains(MailTo.String(), toMail) {
+					mailContains = true
+				}
+			}
+			if !mailContains {
+				continue
+			}
+		}
+
 		sentMessage, err := SendMessageToChat(message, chatId, telegramConfig, &client)
 		if err != nil {
 			// If unable to send at least one message -- reject the whole email.
