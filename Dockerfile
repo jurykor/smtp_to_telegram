@@ -1,4 +1,4 @@
-FROM golang:1.20-alpine3.18 AS builder
+FROM golang:1.21-alpine3.18 AS builder
 
 RUN apk add --no-cache git ca-certificates mailcap
 
@@ -10,7 +10,7 @@ COPY . .
 # --build-arg ST_VERSION=`git describe --tags --always`
 ARG ST_VERSION
 ARG GOPROXY=direct
-RUN CGO_ENABLED=0 GOOS=linux go build \
+RUN CGO_ENABLED=0 GOOS=linux go build -v \
         -ldflags "-s -w \
             -X main.Version=${ST_VERSION:-UNKNOWN_RELEASE}" \
         -a -o smtp_to_telegram
