@@ -1,0 +1,14 @@
+[Unit]
+Description=Simple smtp to telegram
+Wants=network-online.target
+After=network.target network-online.target
+
+[Service]
+Type=simple
+Restart=always
+User=daemon
+Group=daemon
+ExecStart=/usr/local/bin/smtp_to_telegram  --telegram-chat-ids "channel@mail.id:channel_ids" --telegram-bot-token-file /etc/smtp_to_telegram/telegram-bot-token
+
+[Install]
+WantedBy=multi-user.target
