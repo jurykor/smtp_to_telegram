@@ -332,7 +332,7 @@ func SendEmailToTelegram(e *mail.Envelope,
 			parsedChatId := strings.Split(chatId, ":")
 			toMail, chatId = parsedChatId[0], parsedChatId[1]
 			for _, mailTo := range e.RcptTo {
-				logger.Info(toMail, mailTo.String())
+				logger.Info(toMail, ":", mailTo.String())
 				if strings.Contains(mailTo.String(), toMail) {
 					mailContains = true
 				}
