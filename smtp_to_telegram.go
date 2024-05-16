@@ -181,16 +181,15 @@ func main() {
 			EnvVars: []string{"ST_SMTP_MAX_ENVELOPE_SIZE"},
 		},
 		&cli.StringFlag{
-			Name:     "telegram-chat-ids",
-			Usage:    "Telegram: comma-separated list of chat ids, could also have email mapping to chat id",
-			EnvVars:  []string{"ST_TELEGRAM_CHAT_IDS"},
-			Required: false,
+			Name:    "telegram-chat-ids",
+			Usage:   "Telegram: comma-separated list of chat ids, could also have email mapping to chat id",
+			EnvVars: []string{"ST_TELEGRAM_CHAT_IDS"},
 		},
 		&cli.StringFlag{
-			Name:     "telegram-chat-ids-file",
-			Usage:    "Telegram: file with comma-separated list of chat ids, could also have email mapping to chat id",
-			EnvVars:  []string{"ST_TELEGRAM_CHAT_IDS"},
-			Required: false,
+			Name:      "telegram-chat-ids-file",
+			Usage:     "Telegram: file containing comma-separated list of chat ids, could also have email mapping to chat id",
+			TakesFile: true,
+			EnvVars:   []string{"ST_TELEGRAM_CHAT_IDS_FILE"},
 		},
 		&cli.StringFlag{
 			Name:    "telegram-bot-token",
