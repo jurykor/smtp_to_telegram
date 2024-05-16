@@ -95,6 +95,20 @@ func main() {
 		"all incoming Email messages to Telegram."
 	app.Version = Version
 	app.Action = func(c *cli.Context) error {
+		var telegramChatIds string
+		if c.String("telegram-chat-ids") == "" {
+			if c.String("telegram-chat-ids-file") == "" {
+				return fmt.Errorf("either --telegram-chat-ids or --telegram-chat-ids-file is required")
+			} else {
+				bytes, err := os.ReadFile(c.String("telegram-chat-ids-file"))
+				if err != nil {
+					return err
+				}
+				telegramChatIds = strings.TrimSpace(string(bytes))
+			}
+		} else {
+			telegramChatIds = c.String("telegram-chat-ids")
+		}
 		var telegramBotToken string
 		if c.String("telegram-bot-token") == "" {
 			if c.String("telegram-bot-token-file") == "" {
@@ -130,7 +144,7 @@ func main() {
 			os.Exit(1)
 		}
 		telegramConfig := &TelegramConfig{
-			telegramChatIds:                  c.String("telegram-chat-ids"),
+			telegramChatIds:                  telegramChatIds,
 			telegramBotToken:                 telegramBotToken,
 			telegramApiPrefix:                c.String("telegram-api-prefix"),
 			telegramApiTimeoutSeconds:        c.Float64("telegram-api-timeout-seconds"),
@@ -170,7 +184,13 @@ func main() {
 			Name:     "telegram-chat-ids",
 			Usage:    "Telegram: comma-separated list of chat ids, could also have email mapping to chat id",
 			EnvVars:  []string{"ST_TELEGRAM_CHAT_IDS"},
-			Required: true,
+			Required: false,
+		},
+		&cli.StringFlag{
+			Name:     "telegram-chat-ids-file",
+			Usage:    "Telegram: file with comma-separated list of chat ids, could also have email mapping to chat id",
+			EnvVars:  []string{"ST_TELEGRAM_CHAT_IDS"},
+			Required: false,
 		},
 		&cli.StringFlag{
 			Name:    "telegram-bot-token",
