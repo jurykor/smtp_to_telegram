@@ -192,7 +192,7 @@ func main() {
 		&cli.StringFlag{
 			Name:    "message-template",
 			Usage:   "Telegram message template",
-			Value:   "From: {from}\\nTo: {to}\\nSubject: {subject}\\n\\n{body}\\n\\n{attachments_details}",
+			Value:   "From: {from}\\nSubject: {subject}\\n\\nMessage:\\n{body}\\n\\nAttachments:\\n{attachments_details}",
 			EnvVars: []string{"ST_TELEGRAM_MESSAGE_TEMPLATE"},
 		},
 		&cli.Float64Flag{
